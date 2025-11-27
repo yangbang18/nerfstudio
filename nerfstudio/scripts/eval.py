@@ -30,6 +30,17 @@ from nerfstudio.utils.eval_utils import eval_setup
 from nerfstudio.utils.rich_utils import CONSOLE
 
 
+# Added by Yang B: avoid randomness in GriffinLim algorithm
+def _set_random_seed(seed) -> None:
+    """Set randomness seed in torch and numpy"""
+    import random
+    import numpy as np
+    import torch
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+
+
 @dataclass
 class ComputePSNR:
     """Load a checkpoint, compute some PSNR metrics, and save it to a JSON file."""
@@ -40,12 +51,19 @@ class ComputePSNR:
     output_path: Path = Path("output.json")
     # Optional path to save rendered outputs to.
     render_output_path: Optional[Path] = None
-    # Added by Yang B.: specific step to load. If None, load the latest checkpoint.
+    # Added by Yang B.: 
+    # 1) specific step to load. If None, load the latest checkpoint.
+    # 2) specific seed to use. If None, use the training seed.
     load_step: Optional[int] = None
+    seed: Optional[int] = None
 
     def main(self) -> None:
         """Main function."""
         config, pipeline, checkpoint_path, _ = eval_setup(self.load_config, load_step=self.load_step)
+
+        seed = self.seed or config.machine.seed
+        _set_random_seed(seed)
+
         assert self.output_path.suffix == ".json"
         if self.render_output_path is not None:
             self.render_output_path.mkdir(parents=True, exist_ok=True)
