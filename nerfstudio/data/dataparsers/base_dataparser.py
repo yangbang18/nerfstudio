@@ -70,7 +70,8 @@ class DataparserOutputs:
     dataparser_scale: float = 1.0
     """Scale applied by the dataparser."""
 
-    transform_matrix: Float[Tensor, "3 4"] = torch.eye(4)[:3, :] # Added by Yang B.
+    applied_transform: Float[Tensor, "3 4"] = torch.eye(4)[:3, :] # Added by Yang B.
+    # - applied_transform contains the transformation to saved coordinates from original data coordinates.
     """Transform produced by camera_utils.auto_orient_and_center_poses """
 
     def as_dict(self) -> dict:
