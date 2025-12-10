@@ -411,6 +411,7 @@ class Nerfstudio(DataParser):
             dataparser_scale=scale_factor,
             dataparser_transform=dataparser_transform_matrix,
             applied_transform=applied_transform, # Added by Yang B.
+            transform_matrix=transform_matrix, # Added by Yang B.
             metadata={
                 "depth_filenames": depth_filenames if len(depth_filenames) > 0 else None,
                 "depth_unit_scale_factor": self.config.depth_unit_scale_factor,
