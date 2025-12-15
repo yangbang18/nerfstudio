@@ -76,6 +76,9 @@ class DataparserOutputs:
     transform_matrix: Float[Tensor, "3 4"] = torch.eye(4)[:3, :] # Added by Yang B.
     """Transform produced by camera_utils.auto_orient_and_center_poses """
 
+    min_max_coordinate: Float[Tensor, "2 3"] = torch.zeros(3) # Added by Yang B.
+    """Minimun & maximun xyz coordinate of unscaled poses"""
+
     def as_dict(self) -> dict:
         """Returns the dataclass as a dictionary."""
         return vars(self)

@@ -240,6 +240,12 @@ class Nerfstudio(DataParser):
             center_method=self.config.center_method,
         )
 
+        # Yang B.: record minimun & maximun xyz coordinate of unscaled poses
+        min_max_coordinate = torch.stack((
+            poses[:, :3, 3].min(dim=0).values,
+            poses[:, :3, 3].max(dim=0).values,
+        ), dim=0) # (2, 3)
+
         # Scale poses
         scale_factor = 1.0
         if self.config.auto_scale_poses:
@@ -412,6 +418,7 @@ class Nerfstudio(DataParser):
             dataparser_transform=dataparser_transform_matrix,
             applied_transform=applied_transform, # Added by Yang B.
             transform_matrix=transform_matrix, # Added by Yang B.
+            min_max_coordinate=min_max_coordinate, # Added by Yang B.
             metadata={
                 "depth_filenames": depth_filenames if len(depth_filenames) > 0 else None,
                 "depth_unit_scale_factor": self.config.depth_unit_scale_factor,
